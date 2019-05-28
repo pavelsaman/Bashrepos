@@ -16,3 +16,8 @@ $ bashrepos.bash l[ist] - lists cached local git repos ($HOME/.gitlocalrepos) an
 $ bashrepos.bash s[earch] REPO/BRANCH - searches for a local git repo or any of the branches in the cache file
 $ bashrepos.bash h
 ```
+# Autocompletion
+Add the following line into your .bashrc or similar:
+```
+source /path-to-script/bashrepos-completion.bash
+```
