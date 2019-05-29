@@ -33,12 +33,9 @@ function update {
 				fi
 			done
 		fi
+		
 		# generate cache
-		if [[ -n $current_branch ]]; then
-		       	echo "${repo}#${current_branch}${all_branches}" >> "$repos_cache"
-		else
-			echo "$repo" >> "$repos_cache"
-		fi
+		[[ -n $current_branch ]] && echo "${repo}#${current_branch}${all_branches}" >> "$repos_cache" || echo "$repo" >> "$repos_cache"
 	done
 }
 
@@ -91,7 +88,6 @@ function _check_help {
 	echo "s[earch] REPO/BRANCH - searches for a local git repo or any of the branches in the cache file"
 	kill -SIGINT $$
 }
-
 
 case $1 in
 	h | H | -h | -H | help | HELP | --help | --HELP)
