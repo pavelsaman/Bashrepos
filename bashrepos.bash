@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/usr/bin/env bash 
 
 # The following script finds all git local repos under the current/provided dir,
 # attaches current and all other branches to each repo and saves it all into a file in $HOME.
