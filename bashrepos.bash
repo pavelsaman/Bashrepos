@@ -10,21 +10,21 @@ repos_cache="${HOME}/${cache_file_name}"
 
 function update {
 	# start searching from the current dir or from the dir provided in a parameter
-	start_search_dir=$1
-	[[ -z $1 ]] && start_search_dir=$(pwd)
+	start_search_dir="$1"
+	[[ -z $1 ]] && start_search_dir="$(pwd)"
 	
 	# new cache file
-	/bin/rm $repos_cache 2>/dev/null
-	touch $repos_cache
+	/bin/rm "$repos_cache" 2>/dev/null
+	touch "$repos_cache"
 
 	# find all local repos
-	for repo in $(find $start_search_dir -type d -name .git 2>/dev/null); do
+	for repo in $(find "$start_search_dir" -type d -name .git 2>/dev/null); do
 		# take away last dir, that is .git
-		repo=$(dirname $repo)
+		repo=$(dirname "$repo")
 		# find the current branch of the repo
 		if [[ -x $repo ]]; then
-			cd $repo
-			current_branch=$(git branch | grep "*" | cut -d' ' -f 2)
+			cd "$repo" || exit 1
+			current_branch=$(git branch | grep -E "^[*]{1}.*" | cut -d' ' -f 2)
 			# get all branches, not only the current one
 			all_branches=""
 			for branch in $(git branch | sed -n -E 's/(.{2})(.*)$/\2/ p'); do
@@ -35,9 +35,9 @@ function update {
 		fi
 		# generate cache
 		if [[ -n $current_branch ]]; then
-		       	echo "${repo}#${current_branch}${all_branches}" >> $repos_cache
+		       	echo "${repo}#${current_branch}${all_branches}" >> "$repos_cache"
 		else
-			echo $repo >> $repos_cache
+			echo "$repo" >> "$repos_cache"
 		fi
 	done
 }
@@ -49,12 +49,12 @@ function search {
 
 	echo ""
 	# try to find local repos in cache
-	c_match=$(cat $repos_cache | grep $1)
+	c_match=$(grep "$1" "$repos_cache")
 	if [[ -n $c_match ]]; then # if there's a match
 		printf "location#current_branch#another_branch#another_branch_2#...\n\n"
 
 		for repo in $c_match; do # print all matched local repos from cache
-			echo $repo
+			echo "$repo"
 		done
 	else
 		echo "$1 is not a local repo."
@@ -69,7 +69,7 @@ function list {
 	# list all local repos from cache, current repo in green
 	if [[ -s $repos_cache ]]; then
 		printf "location#current_branch#another_branch#another_branch_2#...\n\n"
-		cat $repos_cache
+		cat "$repos_cache"
 	else
 		echo "Local cache is empty."
 	fi
@@ -98,13 +98,13 @@ case $1 in
 		_check_help
 		;;
 	u | U | update)
-		update $2
+		update "$2"
 		;;
 	s | S | search)
-		search $2
+		search "$2"
 		;;
 	l | L | list)
-		list $2
+		list "$2"
 		;;
 	*)
 		_check_help
