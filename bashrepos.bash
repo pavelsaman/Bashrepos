@@ -5,8 +5,8 @@
 # Therefore one can easily see all local repos with only one command (bashrepos.bash l),
 # or search for local repos or branches.
 
-CACHE_FILE_NAME=".gitlocalrepos"
-REPOS_CACHE="${HOME}/${CACHE_FILE_NAME}"
+cache_file_name=".gitlocalrepos"
+repos_cache="${HOME}/${cache_file_name}"
 
 function update {
 	# start searching from the current dir or from the dir provided in a parameter
@@ -14,12 +14,11 @@ function update {
 	[[ -z $1 ]] && start_search_dir=$(pwd)
 	
 	# new cache file
-	rm $REPOS_CACHE 2>/dev/null
-	touch $REPOS_CACHE
+	/bin/rm $repos_cache 2>/dev/null
+	touch $repos_cache
 
 	# find all local repos
-	for repo in $(find $start_search_dir -type d -name .git 2>/dev/null)
-	do
+	for repo in $(find $start_search_dir -type d -name .git 2>/dev/null); do
 		# take away last dir, that is .git
 		repo=$(dirname $repo)
 		# find the current branch of the repo
@@ -28,8 +27,7 @@ function update {
 			current_branch=$(git branch | grep "*" | cut -d' ' -f 2)
 			# get all branches, not only the current one
 			all_branches=""
-			for branch in $(git branch | sed -n -E 's/(.{2})(.*)$/\2/ p')
-			do
+			for branch in $(git branch | sed -n -E 's/(.{2})(.*)$/\2/ p'); do
 				if [[ $branch != $current_branch ]]; then
 					all_branches+="#$branch"
 				fi
@@ -37,26 +35,25 @@ function update {
 		fi
 		# generate cache
 		if [[ -n $current_branch ]]; then
-			echo "${repo}#${current_branch}${all_branches}" >> $REPOS_CACHE
+		       	echo "${repo}#${current_branch}${all_branches}" >> $repos_cache
 		else
-			echo $repo >> $REPOS_CACHE
+			echo $repo >> $repos_cache
 		fi
 	done
 }
 
 function search {
-	check_cache_file
+	_check_cache_file
 	
-	[[ -z $1 ]] && check_help
+	[[ -z $1 ]] && _check_help
 
 	echo ""
 	# try to find local repos in cache
-	c_match=$(cat $REPOS_CACHE | grep $1)
+	c_match=$(cat $repos_cache | grep $1)
 	if [[ -n $c_match ]]; then # if there's a match
 		printf "location#\033[0;32mcurrent_branch\033[0m#another_branch#another_branch_2#...\n\n"
 
-		for repo in $c_match # print all matched local repos from cache
-		do
+		for repo in $c_match; do # print all matched local repos from cache
 			echo $repo | awk -F'#' '$3 != "" { print $1"#\033[0;32m"$2"\033[0m#"$3 }; $3 == "" { print $1"#\033[0;32m"$2"\033[0m" }'
 		done
 	else
@@ -66,29 +63,28 @@ function search {
 }
 
 function list {
-	check_cache_file
+	_check_cache_file
 	
 	echo ""
 	# list all local repos from cache, current repo in green
-	if [[ -s $REPOS_CACHE ]]; then
+	if [[ -s $repos_cache ]]; then
 		printf "location#\033[0;32mcurrent_branch\033[0m#another_branch#another_branch_2#...\n\n"
-		cat $REPOS_CACHE | awk -F'#' '$3 != "" { print $1"#\033[0;32m"$2"\033[0m#"$3 }; $3 == "" { print $1"#\033[0;32m"$2"\033[0m" }'
+		cat $repos_cache | awk -F'#' '$3 != "" { print $1"#\033[0;32m"$2"\033[0m#"$3 }; $3 == "" { print $1"#\033[0;32m"$2"\033[0m" }'
 	else
 		echo "Local cache is empty."
 	fi
 	echo ""
 }
 
-function check_cache_file {
+function _check_cache_file {
 	# checks for existence of cache and prints a message if cache doesn't exist
-	if [[ ! -f $REPOS_CACHE ]]; then
-		echo ""
-		echo "Local cache doesn't exist, run u [dir] first."
-		check_help
+	if [[ ! -f $repos_cache ]]; then
+		printf "\nLocal cache doesn't exist, run u [dir] first."
+		_check_help
 	fi									
 }
 
-function check_help {
+function _check_help {
 	echo ""
 	echo "u[pdate] [dir] - updates local git repos from the current dir down, or from the dir provided down"
 	echo "l[ist] - lists cached local git repos ($HOME/.gitlocalrepos) and all repo branches (repo#current_branch#all_other_branches)"
@@ -99,7 +95,7 @@ function check_help {
 
 case $1 in
 	h | H | -h | -H | help | HELP | --help | --HELP)
-		check_help
+		_check_help
 		;;
 	u | U | update)
 		update $2
@@ -111,6 +107,6 @@ case $1 in
 		list $2
 		;;
 	*)
-		check_help
+		_check_help
 		;;
 esac
