@@ -16,14 +16,14 @@ install:
 uninstall:
 	@echo ""
 	@echo "Removing Bashrepos..."
-	/bin/rm -rf ${INSTALL_DIR}
+	/bin/rm -f ${INSTALL_DIR}/bashrepos.bash ${INSTALL_DIR}/bashrepos-completion.bash ~/.gitlocalrepos
 	@echo "Done"
 	@echo ""
 
 clean:
 	@echo ""
 	@echo "Removing Bashrepos..."
-	/bin/rm -rf ${INSTALL_DIR}
+	/bin/rm -f ${INSTALL_DIR}/bashrepos.bash ${INSTALL_DIR}/bashrepos-completion.bash ~/.gitlocalrepos
 	@echo "Done"
 	@echo""
 
