@@ -51,10 +51,10 @@ function search {
 	# try to find local repos in cache
 	c_match=$(cat $repos_cache | grep $1)
 	if [[ -n $c_match ]]; then # if there's a match
-		printf "location#\033[0;32mcurrent_branch\033[0m#another_branch#another_branch_2#...\n\n"
+		printf "location#current_branch#another_branch#another_branch_2#...\n\n"
 
 		for repo in $c_match; do # print all matched local repos from cache
-			echo $repo | awk -F'#' '$3 != "" { print $1"#\033[0;32m"$2"\033[0m#"$3 }; $3 == "" { print $1"#\033[0;32m"$2"\033[0m" }'
+			echo $repo
 		done
 	else
 		echo "$1 is not a local repo."
@@ -68,8 +68,8 @@ function list {
 	echo ""
 	# list all local repos from cache, current repo in green
 	if [[ -s $repos_cache ]]; then
-		printf "location#\033[0;32mcurrent_branch\033[0m#another_branch#another_branch_2#...\n\n"
-		cat $repos_cache | awk -F'#' '$3 != "" { print $1"#\033[0;32m"$2"\033[0m#"$3 }; $3 == "" { print $1"#\033[0;32m"$2"\033[0m" }'
+		printf "location#current_branch#another_branch#another_branch_2#...\n\n"
+		cat $repos_cache
 	else
 		echo "Local cache is empty."
 	fi
