@@ -18,7 +18,7 @@ function update {
 	touch "$repos_cache"
 
 	# find all local repos
-	for repo in $(find "$start_search_dir" -type d -name .git 2>/dev/null); do
+	find "$start_search_dir" -type d -name .git -print0 | while IFS= read -r -d '' repo; do
 		# take away last dir, that is .git
 		repo=$(dirname "$repo")
 		# find the current branch of the repo
