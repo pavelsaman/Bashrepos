@@ -28,7 +28,7 @@ function update {
 			# get all branches, not only the current one
 			all_branches=""
 			for branch in $(git branch | sed -n -E 's/(.{2})(.*)$/\2/ p'); do
-				if [[ $branch != $current_branch ]]; then
+				if [[ $branch != "$current_branch" ]]; then
 					all_branches+="#$branch"
 				fi
 			done
