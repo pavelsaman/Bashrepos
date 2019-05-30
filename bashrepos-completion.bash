@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-function _bashrepos_completion() {
-	
+function _bashrepos_completion {
 	if (( ${#COMP_WORDS[@]} != 2 )); then
 		return
 	fi

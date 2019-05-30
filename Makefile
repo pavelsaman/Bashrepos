@@ -1,5 +1,14 @@
 INSTALL_DIR=~/.local/bin
 
+define remove
+@echo ""
+@echo "Removing Bashrepos..."
+/bin/rm -f ${INSTALL_DIR}/bashrepos.bash ${INSTALL_DIR}/bashrepos-completion.bash ~/.gitlocalrepos
+@echo "Done"
+@echo ""
+endef
+
+
 all:
 	@echo ""
 	@echo "Please run 'make install'"
@@ -14,17 +23,9 @@ install:
 	@echo ""
 
 uninstall:
-	@echo ""
-	@echo "Removing Bashrepos..."
-	/bin/rm -f ${INSTALL_DIR}/bashrepos.bash ${INSTALL_DIR}/bashrepos-completion.bash ~/.gitlocalrepos
-	@echo "Done"
-	@echo ""
+	$(remove)
 
 clean:
-	@echo ""
-	@echo "Removing Bashrepos..."
-	/bin/rm -f ${INSTALL_DIR}/bashrepos.bash ${INSTALL_DIR}/bashrepos-completion.bash ~/.gitlocalrepos
-	@echo "Done"
-	@echo""
+	$(remove)
 
 .PHONY: all install uninstall clean
