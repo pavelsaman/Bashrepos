@@ -89,7 +89,7 @@ function _check_help {
 	kill -SIGINT $$
 }
 
-case $1 in
+case "$1" in
 	h | H | -h | -H | help | HELP | --help | --HELP)
 		_check_help
 		;;
