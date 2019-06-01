@@ -5,7 +5,7 @@ Bashrepos is a tool for finding all local git repositories. In addition to just 
 Simple cache file (.gitlocalrepos) is located in $HOME, making it faster to retrieve information.
 
 # Installation Steps
-1) git clone or just get both of the .bash scripts
+1) git clone or just get both of the .bash scripts and Makefile
 2) cd Bashrepos
 3) make install
 4) in your .bashrc or similar: source ~/.local/bin/bashrepos-completion.bash
